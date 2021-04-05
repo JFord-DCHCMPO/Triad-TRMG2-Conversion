@@ -31,6 +31,13 @@ library(RColorBrewer)
 #install.packages("kableExtra")
 library(kableExtra)
 
+triad_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/Triad_TAZ.shp")
+
+trm_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TAZ_Shape.shp")
+
+trmg2_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TRMG2_TAZ.shp")
+
+
 ```
 
 Employment and demographic data were handled based on which county the new TAZ inhabits. For new Alamance County TAZs, the Triad's existing SE data 
@@ -57,7 +64,7 @@ alamance_emp <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alama
 
 ```
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 emp_map <- leaflet(data=orange_emp)%>%
     setView(-79.26, 36.05, zoom=11) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
@@ -77,5 +84,49 @@ emp_map <- leaflet(data=orange_emp)%>%
 
 
 emp_map
+```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+map <- leaflet(data=triad_taz) %>%
+  setView(-79.26, 36.05, zoom=11) %>%
+  addProviderTiles(providers$CartoDB.Positron)%>%
+  addPolygons(data=triad_taz,
+              group="Triad",
+              color="red",
+              fillColor = "lightgrey",
+              weight=2,
+             # fill=NA,
+              dashArray = c("5,10"),
+              popup=paste("Triad TAZ ID: ", triad_taz$TAZ)) %>%
+    addPolygons(data=trm_taz,
+              group="TRM",
+              color="black",
+              fillColor="blue",
+              weight=1,
+              popup=paste("TRM TAZ ID: ", trm_taz$TAZ_ID)) %>%
+  addPolygons(data=trmg2_taz,
+              group="TRMG2",
+              color="green",
+              weight=1,
+              popup=paste("TRMG2 TAZ ID: ", trmg2_taz$TAZ_ID)) %>%
+    addCircles(data=orange_emp,
+             radius=orange_emp$EMP_2016RE,
+              group="Orange Employment",
+              popup=paste("Company Name: ", orange_emp$COMPANY_NA, "<br>",
+                          "TRM Employment Category: ", orange_emp$ESTAB_TYP2,"<br>",
+                          "Employees: ", orange_emp$EMP_2016RE)) %>%
+  addCircles(data=alamance_emp,
+             radius=alamance_emp$ACTUAL_LOC,
+             fillColor ="green",
+             group="Alamance Employment",
+             popup=paste("Company Name: ", alamance_emp$COMPANY_NA, "<br>",
+                         "TRM Employment Category: ", alamance_emp$TRM_EMPLOY, "<br>",
+                         "Employees: ", alamance_emp$ACTUAL_LOC)) %>%
+  addLayersControl(overlayGroups = c("Triad", "TRM", "TRMG2", "Alamance Employment", "Orange Employment"))
+
+map
 ```
 
