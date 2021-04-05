@@ -28,5 +28,54 @@ library(lubridate)
 library(htmltools)
 library(RColorBrewer)
 
+#install.packages("kableExtra")
+library(kableExtra)
+
+```
+
+Employment and demographic data were handled based on which county the new TAZ inhabits. For new Alamance County TAZs, the Triad's existing SE data 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+triad_se <- tcadr::read_tcad("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/SE/SE 2017_v5_03-19-2019.bin")
+
+triad_se_df <- triad_se[triad_se$COUNTY_NAME=="Alamance",]
+
+
+triad_se_df %>%
+  select(ID ,COUNTY_NAME,  HH, POP_GRP_QT, POP_IN_HH, EMP_HWYRET, EMP_IND, EMP_RETAIL, EMP_SERVICE, EMP_OFFICE,SCHOOL_EMP, K12_STUDENT)
+
+kbl(triad_se_df, caption="Triad Socioeconomic and Demographic Data (sample)") %>%
+  kable_classic(html_font="Cambria")
+```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
+
+orange_emp <-st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/SE Data/Employment/Mebane_OC_Employment_2016.shp")
+alamance_emp <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/SE Data/Employment/Mebane_AC_Employment_2016.shp")
+
+```
+
+```{r}
+emp_map <- leaflet(data=orange_emp)%>%
+    setView(-79.26, 36.05, zoom=11) %>%
+  addProviderTiles(providers$CartoDB.Positron)%>%
+  addCircles(data=orange_emp,
+             radius=orange_emp$EMP_2016RE,
+              group="Orange",
+              popup=paste("Company Name: ", orange_emp$COMPANY_NA, "<br>",
+                          "TRM Employment Category: ", orange_emp$ESTAB_TYP2,"<br>",
+                          "Employees: ", orange_emp$EMP_2016RE)) %>%
+  addCircles(data=alamance_emp,
+             radius=alamance_emp$ACTUAL_LOC,
+             fillColor ="green",
+             group="Alamance",
+             popup=paste("Company Name: ", alamance_emp$COMPANY_NA, "<br>",
+                         "TRM Employment Category: ", alamance_emp$TRM_EMPLOY, "<br>",
+                         "Employees: ", alamance_emp$ACTUAL_LOC))
+
+
+emp_map
 ```
 
