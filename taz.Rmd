@@ -29,7 +29,7 @@ library(RColorBrewer)
 
 ```
 
-
+For TAZ conversion, only the conversion only concerned a certain number of Triad TAZs in Alamance and Mebane counties. 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
 triad_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/Triad_TAZ.shp")
@@ -40,7 +40,7 @@ trm_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance E
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 map <- leaflet(data=triad_taz) %>%
-  setView(-79.26, 36.1, zoom=15) %>%
+  setView(-79.26, 36.05, zoom=11) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
   addPolygons(data=triad_taz,
               group="Triad",
