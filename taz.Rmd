@@ -40,14 +40,22 @@ trm_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance E
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 map <- leaflet(data=triad_taz) %>%
+  setView(-79.26, 36.1, zoom=15) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
   addPolygons(data=triad_taz,
               group="Triad",
               color="black",
+              fillColor = "lightgrey",
               weight=0.8,
-              fill=NA,
-              dashArray = c("10,10"),
-              popup=paste("Triad TAZ ID: ", triad_taz$TAZ))
+             # fill=NA,
+              dashArray = c("5,5"),
+              popup=paste("Triad TAZ ID: ", triad_taz$TAZ)) %>%
+  addPolygons(data=trm_taz,
+              group="TRM",
+              color="green",
+              popup=paste("TRMG2 TAZ ID: ", trm_taz$ID1)) %>%
+  addLayersControl(overlayGroups = c("Triad", "TRM"))
+
 map
 
 ```
