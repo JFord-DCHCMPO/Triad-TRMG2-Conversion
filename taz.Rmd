@@ -5,3 +5,50 @@ date: "4/5/2021"
 output: html_document
 ---
 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
+library(dplyr)
+library(ggplot2)
+library(leaflet)
+library(tcadr)
+library(sf)
+library(xlsx)
+library(readxl)
+library(plotly)
+library(sf)
+library(dplyr)
+library(tidygeocoder)
+library(leaflet)
+library(rgdal)
+library(dplyr)
+library(rmarkdown)
+library(crosstalk)
+library(lubridate)
+library(htmltools)
+library(RColorBrewer)
+
+```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
+triad_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/Triad_TAZ.shp")
+
+trm_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TRMG2_TAZ.shp")
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+map <- leaflet(data=triad_taz) %>%
+  addProviderTiles(providers$CartoDB.Positron)%>%
+  addPolygons(data=triad_taz,
+              group="Triad",
+              color="black",
+              weight=0.8,
+              fill=NA,
+              dashArray = c("10,10"),
+              popup=paste("Triad TAZ ID: ", triad_taz$TAZ))
+map
+
+```
+

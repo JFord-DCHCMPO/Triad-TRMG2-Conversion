@@ -7,5 +7,7 @@ navbar:
       href: taz.html
     - text: "Socioeconomic and Demographic Data"
       href: se.html
-
+    - text: "Highway Network"
+      href: hwy.html
+      
 output_dir: "docs"
