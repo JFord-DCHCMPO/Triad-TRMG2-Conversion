@@ -1,10 +1,11 @@
 name: "Triad to TRMG2 Conversion"
 navbar:
-  title: "Home"
   left:
     - text: "Home"
       href: index.html
+    - text: "TAZ Network"
+      href: taz.html
+    - text: "Socioeconomic and Demographic Data"
+      href: se.html
 
-
-      
 output_dir: "docs"
