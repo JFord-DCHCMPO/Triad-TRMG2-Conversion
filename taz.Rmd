@@ -1,5 +1,5 @@
 ---
-title: "taz"
+title: "TAZ"
 author: "Jacob Ford DCHC MPO"
 date: "4/5/2021"
 output: html_document
@@ -29,12 +29,14 @@ library(RColorBrewer)
 
 ```
 
-For TAZ conversion, only the conversion only concerned a certain number of Triad TAZs in Alamance and Mebane counties. 
+For TAZ conversion, only the conversion only concerned a certain number of Triad TAZs in Alamance and Mebane counties. The previous TAZ boundary for the TRMv6.2 was the Alamance-Orange County Line, see the below map "TRM" option. The expansion area is depicted by the "TRMG2" option.  
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
 triad_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/Triad_TAZ.shp")
 
-trm_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TRMG2_TAZ.shp")
+trm_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TAZ_Shape.shp")
+
+trmg2_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TRMG2_TAZ.shp")
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -44,17 +46,24 @@ map <- leaflet(data=triad_taz) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
   addPolygons(data=triad_taz,
               group="Triad",
-              color="black",
+              color="red",
               fillColor = "lightgrey",
-              weight=0.8,
+              weight=2,
              # fill=NA,
-              dashArray = c("5,5"),
+              dashArray = c("5,10"),
               popup=paste("Triad TAZ ID: ", triad_taz$TAZ)) %>%
-  addPolygons(data=trm_taz,
+    addPolygons(data=trm_taz,
               group="TRM",
+              color="black",
+              fillColor="blue",
+              weight=1,
+              popup=paste("TRM TAZ ID: ", trm_taz$TAZ_ID)) %>%
+  addPolygons(data=trmg2_taz,
+              group="TRMG2",
               color="green",
-              popup=paste("TRMG2 TAZ ID: ", trm_taz$ID1)) %>%
-  addLayersControl(overlayGroups = c("Triad", "TRM"))
+              weight=1,
+              popup=paste("TRMG2 TAZ ID: ", trmg2_taz$TAZ_ID)) %>%
+  addLayersControl(overlayGroups = c("Triad", "TRM", "TRMG2"))
 
 map
 

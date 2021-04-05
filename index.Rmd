@@ -1,5 +1,5 @@
 ---
-title: "index"
+title: "Home"
 author: "Jacob Ford DCHC MPO"
 date: "4/5/2021"
 output: html_document
