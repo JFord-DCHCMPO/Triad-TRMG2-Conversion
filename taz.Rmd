@@ -31,7 +31,10 @@ library(RColorBrewer)
 
 For TAZ conversion, only the conversion only concerned a certain number of Triad TAZs in Alamance and Mebane counties. The previous TAZ boundary for the TRMv6.2 was the Alamance-Orange County Line, see the below map "TRM" option. The expansion area is depicted by the "TRMG2" option. 
 
-Existing Triad (red dotted lines below) TAZs were split based on a number of factors. These include cohesion and full assimilation into the existing TRM TAZ structures, land use and economic activity within the TAZ, and natural barriers that make ideal TAZ boundaries. Relative to the existing TRM model, the expansion into Alamance County and folding in of the urban Mebane area brings 52 new TAZs from Alamance County and 12 new in Orange County. 
+Existing Triad (red dotted lines below) TAZs were split based on a number of factors. These include cohesion and full assimilation into the existing TRM TAZ and highway network structure, land use and economic activity within the newly assimilated TAZ, and natural barriers that make ideal TAZ boundaries including the new western boundary of the TRMG2 that mainly follows the Haw River. Mostly the size and boundary of the Triad TAZ was preserved. 
+
+
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
 triad_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/Triad_TAZ.shp")
@@ -70,4 +73,4 @@ map <- leaflet(data=triad_taz) %>%
 map
 
 ```
-
+Relative to the existing TRM model, the expansion into Alamance County and folding in of the urban Mebane area brings 52 new TAZs from Alamance County and 12 new in Orange County. 
