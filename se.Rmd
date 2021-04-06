@@ -145,3 +145,53 @@ map <- leaflet(data=triad_taz) %>%
 map %>% hideGroup("Triad") %>% hideGroup("TRM")
 ```
 
+**Demographic Data**
+
+Where the employment data was distributed using InfoUSA point data, parcel data exported as centroids available from the respective county website were used as the distributive factor for number of households and population. To filter out commericial or non-residential homes, the parcel classification from county websites was used. Pin numbers are used at the home level to join parcel point data and parcel polygon layers from the county website, however only the final point layer is provided below. Home type classifications is available below when clicking on a point:  
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+
+
+orange_parcel <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/Orange_Parcel_Points_v2.shp")
+
+alamance_parcel <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/Alamance_Parcel_Points.shp")
+```
+
+
+```{r}
+parcel_map <-leaflet(data=alamance_parcel2)%>%
+  setView(-79.26, 36.05, zoom=11) %>%
+  addProviderTiles(providers$CartoDB.Positron)%>%
+  addCircles(data=alamance_parcel,
+            group ="Alamance Parcels",
+             radius=alamance_parcel$AHBED_,
+             color="green",
+            popup=paste("Home Type: ", alamance_parcel$XXDDC1, "<br>")) %>%
+  addCircles(data=orange_parcel,
+            group="Orange Parcels", radius=2,
+          color="orange",
+          popup=paste("Home Type: ", orange_parcel$LBSCDESC)) %>%
+    addPolygons(data=triad_taz,
+              group="Triad",
+              color="red",
+              fillColor = "lightgrey",
+              weight=2,
+             # fill=NA,
+              dashArray = c("5,10"),
+              popup=paste("Triad TAZ ID: ", triad_taz$TAZ)) %>%
+    addPolygons(data=trm_taz,
+              group="TRM",
+              color="black",
+              fillColor="blue",
+              weight=1,
+              popup=paste("TRM TAZ ID: ", trm_taz$TAZ_ID)) %>%
+  addPolygons(data=trmg2_taz,
+              group="TRMG2",
+              color="green",
+              weight=1,
+              popup=paste("TRMG2 TAZ ID: ", trmg2_taz$TAZ_ID)) %>%
+  addLayersControl(overlayGroups = c("Triad", "TRM", "TRMG2", "Alamance Parcels", "Orange Parcels"))
+
+parcel_map %>% hideGroup("TRM") %>% hideGroup("Triad")
+```
+
