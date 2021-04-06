@@ -67,35 +67,15 @@ kbl(triad_se_df, caption="Triad Socioeconomic and Demographic Data (sample)") %>
 
 **Employment Data**
 
-Employment data for TAZs in Alamance County is sourced from the Triad Model, whereas TAZs in Orange County used existing TRMv6.2 employment data. Where splits occurred from either the Triad or TRMv6.2, a distribution factor was applied. InfoUSA 2016 point data formed the distribution factor. The point layer is available below. Employment categories were split based off the proportion of the points within the new TRMG2 TAZ boundaries.  
+Employment data for TAZs in Alamance County is sourced from the Triad Model, whereas TAZs in Orange County used existing TRMv6.2 employment data. Where splits occurred from either the Triad or TRMv6.2, a distribution factor was applied. InfoUSA 2016 point data formed the distribution factor. The point layer is available below. Employment categories were split based off the proportion of the points within the new TRMG2 TAZ boundaries. 
+
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
 
 orange_emp <-st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/SE Data/Employment/Mebane_OC_Employment_2016.shp")
 alamance_emp <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/SE Data/Employment/Mebane_AC_Employment_2016.shp")
 
-```
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE, result='hide'}
-# emp_map <- leaflet(data=orange_emp)%>%
-#     setView(-79.26, 36.05, zoom=11) %>%
-#   addProviderTiles(providers$CartoDB.Positron)%>%
-#   addCircles(data=orange_emp,
-#              radius=orange_emp$EMP_2016RE,
-#               group="Orange",
-#               popup=paste("Company Name: ", orange_emp$COMPANY_NA, "<br>",
-#                           "TRM Employment Category: ", orange_emp$ESTAB_TYP2,"<br>",
-#                           "Employees: ", orange_emp$EMP_2016RE)) %>%
-#   addCircles(data=alamance_emp,
-#              radius=alamance_emp$ACTUAL_LOC,
-#              fillColor ="green",
-#              group="Alamance",
-#              popup=paste("Company Name: ", alamance_emp$COMPANY_NA, "<br>",
-#                          "TRM Employment Category: ", alamance_emp$TRM_EMPLOY, "<br>",
-#                          "Employees: ", alamance_emp$ACTUAL_LOC))
-# 
-# 
-# emp_map
 ```
 
 
@@ -159,7 +139,7 @@ alamance_parcel <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/Alamance_
 
 
 ```{r}
-parcel_map <-leaflet(data=alamance_parcel2)%>%
+parcel_map <-leaflet(data=alamance_parcel)%>%
   setView(-79.26, 36.05, zoom=11) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
   addCircles(data=alamance_parcel,
