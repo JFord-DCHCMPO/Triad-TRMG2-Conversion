@@ -48,8 +48,12 @@ triad_se <- tcadr::read_tcad("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/
 triad_se_df <- triad_se[triad_se$COUNTY_NAME=="Alamance",]
 
 
+
+
 triad_se_df %>%
   select(ID ,COUNTY_NAME,  HH, POP_GRP_QT, POP_IN_HH, EMP_HWYRET, EMP_IND, EMP_RETAIL, EMP_SERVICE, EMP_OFFICE,SCHOOL_EMP, K12_STUDENT)
+
+triad_se_df <- head(triad_se_df, 10)
 
 kbl(triad_se_df, caption="Triad Socioeconomic and Demographic Data (sample)") %>%
   kable_classic(html_font="Cambria")
