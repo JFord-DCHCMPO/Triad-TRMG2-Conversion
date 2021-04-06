@@ -138,7 +138,7 @@ alamance_parcel <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/Alamance_
 ```
 
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 parcel_map <-leaflet(data=alamance_parcel)%>%
   setView(-79.26, 36.05, zoom=11) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
