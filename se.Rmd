@@ -40,9 +40,11 @@ trmg2_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance
 
 ```
 
-Employment and demographic data were handled based on which county the new TAZ inhabits. For new Alamance County TAZs, the Triad's existing SE data 
+**Overview**
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+Employment and demographic data was provided as of 2016 for the TRMG2. Existing data from both the TRMv6.2 (Orange County TAZs) and Triad Model (Alamance County TAZs) were utilized for both employment and demographic data. Convertin Triad model data into the TRMG2 was relatively simple, and below is a sample of the existing data available from the Triad Model. 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 triad_se <- tcadr::read_tcad("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/SE/SE 2017_v5_03-19-2019.bin")
 
 triad_se_df <- triad_se[triad_se$COUNTY_NAME=="Alamance",]
@@ -55,11 +57,17 @@ triad_se_df %>%
 
 triad_se_df <- head(triad_se_df, 10)
 
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 kbl(triad_se_df, caption="Triad Socioeconomic and Demographic Data (sample)") %>%
   kable_classic(html_font="Cambria")
 ```
 
+**Employment Data**
 
+Employment data for TAZs in Alamance County is sourced from the Triad Model, whereas TAZs in Orange County used existing TRMv6.2 employment data. Where splits occurred from either the Triad or TRMv6.2, a distribution factor was applied. InfoUSA 2016 point data formed the distribution factor. The point layer is available below. Employment categories were split based off the proportion of the points within the new TRMG2 TAZ boundaries.  
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
 
@@ -68,28 +76,31 @@ alamance_emp <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alama
 
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-emp_map <- leaflet(data=orange_emp)%>%
-    setView(-79.26, 36.05, zoom=11) %>%
-  addProviderTiles(providers$CartoDB.Positron)%>%
-  addCircles(data=orange_emp,
-             radius=orange_emp$EMP_2016RE,
-              group="Orange",
-              popup=paste("Company Name: ", orange_emp$COMPANY_NA, "<br>",
-                          "TRM Employment Category: ", orange_emp$ESTAB_TYP2,"<br>",
-                          "Employees: ", orange_emp$EMP_2016RE)) %>%
-  addCircles(data=alamance_emp,
-             radius=alamance_emp$ACTUAL_LOC,
-             fillColor ="green",
-             group="Alamance",
-             popup=paste("Company Name: ", alamance_emp$COMPANY_NA, "<br>",
-                         "TRM Employment Category: ", alamance_emp$TRM_EMPLOY, "<br>",
-                         "Employees: ", alamance_emp$ACTUAL_LOC))
-
-
-emp_map
+```{r, echo=FALSE, message=FALSE, warning=FALSE, result='hide'}
+# emp_map <- leaflet(data=orange_emp)%>%
+#     setView(-79.26, 36.05, zoom=11) %>%
+#   addProviderTiles(providers$CartoDB.Positron)%>%
+#   addCircles(data=orange_emp,
+#              radius=orange_emp$EMP_2016RE,
+#               group="Orange",
+#               popup=paste("Company Name: ", orange_emp$COMPANY_NA, "<br>",
+#                           "TRM Employment Category: ", orange_emp$ESTAB_TYP2,"<br>",
+#                           "Employees: ", orange_emp$EMP_2016RE)) %>%
+#   addCircles(data=alamance_emp,
+#              radius=alamance_emp$ACTUAL_LOC,
+#              fillColor ="green",
+#              group="Alamance",
+#              popup=paste("Company Name: ", alamance_emp$COMPANY_NA, "<br>",
+#                          "TRM Employment Category: ", alamance_emp$TRM_EMPLOY, "<br>",
+#                          "Employees: ", alamance_emp$ACTUAL_LOC))
+# 
+# 
+# emp_map
 ```
 
+
+
+The below map shows the point layer over the TRMG2 TAZ boundaries: 
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -131,6 +142,6 @@ map <- leaflet(data=triad_taz) %>%
                          "Employees: ", alamance_emp$ACTUAL_LOC)) %>%
   addLayersControl(overlayGroups = c("Triad", "TRM", "TRMG2", "Alamance Employment", "Orange Employment"))
 
-map
+map %>% hideGroup("Triad") %>% hideGroup("TRM")
 ```
 
