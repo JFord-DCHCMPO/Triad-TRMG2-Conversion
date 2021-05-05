@@ -70,7 +70,6 @@ kbl(triad_se_df, caption="Triad Socioeconomic and Demographic Data (sample)") %>
 Employment data for TAZs in Alamance County is sourced from the Triad Model, whereas TAZs in Orange County used existing TRMv6.2 employment data. Where splits occurred from either the Triad or TRMv6.2, a distribution factor was applied. InfoUSA 2016 point data formed the distribution factor. The point layer is available below. Employment categories were split based off the proportion of the points within the new TRMG2 TAZ boundaries. 
 
 
-
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
 
 orange_emp <-st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/SE Data/Employment/Mebane_OC_Employment_2016.shp")
@@ -138,7 +137,7 @@ alamance_parcel <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/Alamance_
 ```
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 parcel_map <-leaflet(data=alamance_parcel)%>%
   setView(-79.26, 36.05, zoom=11) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
@@ -174,4 +173,108 @@ parcel_map <-leaflet(data=alamance_parcel)%>%
 
 parcel_map %>% hideGroup("TRM") %>% hideGroup("Triad")
 ```
+
+
+
+
+```{r}
+taz_tool <-leaflet()%>%
+  setView(-79.26, 36.05, zoom=11) %>%
+  addProviderTiles(providers$CartoDB.Positron)%>%
+  addPolygons(data=trmg2_taz,
+              group="TRMG2",
+              color="green",
+              weight=1,
+              popup=paste("TRMG2 TAZ ID: ", trmg2_taz$TAZ_ID))
+
+
+taz_tool
+```
+
+
+
+
+**Info USA Conversion Tables for Employment**
+
+
+
+```{r include=FALSE}
+alamance_se <- trmg2_taz %>%
+  filter(trmg2_taz$COUNTY=="Alamance")
+
+head(alamance_se)
+
+alamance_tazs <- unique(trmg2_taz$TAZ_ID[trmg2_taz$COUNTY=="Alamance"])
+
+alamance_tazs <- sort(alamance_tazs[!is.na(alamance_tazs)])
+
+alamance_df <- data.frame(matrix(ncol=9, nrow=nrow(alamance_se)))
+
+col_names <- c("TAZ", "HH", "HH_Pop", "Ind", "Office", "SvcLo", "SvcHi", "Ret", "Total Employment")
+
+colnames(alamance_df) <- col_names
+
+alamance_df$TAZ <- (alamance_tazs)
+
+
+head(alamance_df)
+
+```
+
+
+
+
+
+
+```{r include=FALSE}
+alamance_df2 <- alamance_emp %>%
+  filter(alamance_emp$TRM_TAZ>0)
+
+
+alamance_df2$ACTUAL_LOC <- as.numeric(alamance_df2$ACTUAL_LOC)
+sum(alamance_df2$ACTUAL_LOC, na.rm=T )
+
+```
+
+
+
+
+
+
+
+```{r message=FALSE, warning=FALSE}
+
+for (taz in unique(alamance_df$TAZ)){
+  
+    alamance_df$`Total Employment`[alamance_df$TAZ==taz] <- sum(alamance_df2$ACTUAL_LOC[alamance_df2$TRM_TAZ==taz], na.rm=T)
+    
+    alamance_df$Ind[alamance_df$TAZ==taz] <- sum(alamance_df2$ACTUAL_LOC[alamance_df2$TRM_TAZ==taz & alamance_df2$TRM_EMPLOY=="Ind"], na.rm=T)
+    alamance_df$Office[alamance_df$TAZ==taz] <- sum(alamance_df2$ACTUAL_LOC[alamance_df2$TRM_TAZ==taz & alamance_df2$TRM_EMPLOY=="Off"], na.rm=T)
+    alamance_df$SvcLo[alamance_df$TAZ==taz] <- sum(alamance_df2$ACTUAL_LOC[alamance_df2$TRM_TAZ==taz & alamance_df2$TRM_EMPLOY=="SvcLo"], na.rm=T) +     sum(alamance_df2$ACTUAL_LOC[alamance_df2$TRM_TAZ==taz & alamance_df2$TRM_EMPLOY=="SvcHi"], na.rm=T)
+    
+    alamance_df$SvcHi[alamance_df$TAZ==taz] <- NA
+    alamance_df$Ret[alamance_df$TAZ==taz] <- sum(alamance_df2$ACTUAL_LOC[alamance_df2$TRM_TAZ==taz & alamance_df2$TRM_EMPLOY=="Ret"], na.rm=T)
+    
+  
+  
+}
+
+alamance_df
+
+```
+
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
 
