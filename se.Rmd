@@ -129,26 +129,26 @@ map %>% hideGroup("Triad") %>% hideGroup("TRM")
 ```
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
-trm_taz <- trm_taz %>%
+trm_taz_zoom <- trm_taz %>%
   filter(trm_taz$TAZ_ID==1208)
 
-trmg2_taz <- trmg2_taz %>%
+trmg2_taz_zoom <- trmg2_taz %>%
   filter(trmg2_taz$TAZ_ID==1208 | trmg2_taz$TAZ_ID==1377 )
 
 map <- leaflet(data=triad_taz) %>%
   setView(-79.2, 36.06, zoom=14) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
-    addPolygons(data=trm_taz,
+    addPolygons(data=trm_taz_zoom,
               group="TRM",
               color="black",
               fillColor="blue",
               weight=1,
-              popup=paste("TRM TAZ ID: ", trm_taz$TAZ_ID)) %>%
-  addPolygons(data=trmg2_taz,
+              popup=paste("TRM TAZ ID: ", trm_taz_zoom$TAZ_ID)) %>%
+  addPolygons(data=trmg2_taz_zoom,
               group="TRMG2",
               color="green",
               weight=1,
-              popup=paste("TRMG2 TAZ ID: ", trmg2_taz$TAZ_ID)) %>%
+              popup=paste("TRMG2 TAZ ID: ", trmg2_taz_zoom$TAZ_ID)) %>%
     addCircles(data=orange_emp,
              radius=orange_emp$EMP_2016RE,
              color="orange",
