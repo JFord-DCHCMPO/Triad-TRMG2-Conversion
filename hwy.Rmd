@@ -27,5 +27,36 @@ library(lubridate)
 library(htmltools)
 library(RColorBrewer)
 
+
+triad_hwy <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TriadModel/MasterLnFiles/TriadHwy_Lines.shp")
+
+trm_v6_hwy<- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TriadModel/MasterLnFiles/TRM_v6_hwy.shp")
+
+trm_ng_hwy<- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TriadModel/MasterLnFiles/TRM_NG_HWY.shp")
+
+
 ```
+```{r}
+hwy_maps <-leaflet()%>%
+  #setView(zoom=8) %>%
+  addProviderTiles(providers$CartoDB.Positron)%>%
+  addPolylines(data=trm_v6_hwy,
+            group ="TRMv6.2",
+            color="black",
+            opacity=0.25,
+            weight=0.5,
+            popup=paste("Road Name: ", trm_v6_hwy$ROADNAME)) %>%
+  addPolylines(data=triad_hwy,
+               group="Triad",
+               color="blue",
+               opacity=0.25,
+               weight=0.5,
+               popup=paste("Road Name: ", triad_hwy$ROUTE_NAME)) %>%
+  
+    addLayersControl(overlayGroups = c("TRMv6.2", "Triad", "TRMG2"))
+
+
+hwy_maps
+```
+
 

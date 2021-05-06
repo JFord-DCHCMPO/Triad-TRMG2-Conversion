@@ -182,7 +182,7 @@ map <- leaflet(data=triad_taz) %>%
 
   addLayersControl(overlayGroups = c("TRM", "TRMG2", "Alamance Employment", "Orange Employment"))
 
-map %>% hideGroup("TRM")
+map %>% hideGroup("TRMG2")
 
 
 ```
