@@ -278,7 +278,7 @@ taz_tool
 
 
 
-```{r include=FALSE}
+```{r eval=FALSE, include=FALSE}
 alamance_se <- trmg2_taz %>%
   filter(trmg2_taz$COUNTY=="Alamance")
 
@@ -306,7 +306,7 @@ head(alamance_df)
 
 
 
-```{r include=FALSE}
+```{r eval=FALSE, include=FALSE}
 alamance_df2 <- alamance_emp %>%
   filter(alamance_emp$TRM_TAZ>0)
 
@@ -322,7 +322,7 @@ sum(alamance_df2$ACTUAL_LOC, na.rm=T )
 
 
 
-```{r message=FALSE, warning=FALSE}
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 for (taz in unique(alamance_df$TAZ)){
   
@@ -345,7 +345,9 @@ alamance_df
 
 
 
-```{r}
+```{r eval=FALSE, message=FALSE, warning=FALSE,}
+
+[link](https://drive.google.com/file/d/1a783Js4Y3pwKLMTg7rOvv8GCIGdmPZEY/view?usp=sharing)
 
 ```
 
