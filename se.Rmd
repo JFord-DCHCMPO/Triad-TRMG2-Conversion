@@ -257,7 +257,7 @@ parcel_map %>% hideGroup("TRM") %>% hideGroup("Triad")
 
 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 taz_tool <-leaflet()%>%
   setView(-79.26, 36.05, zoom=11) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
@@ -274,7 +274,7 @@ taz_tool
 
 
 
-**Info USA Conversion Tables for Employment**
+
 
 
 
@@ -343,13 +343,13 @@ alamance_df
 
 ```
 
+## Final Conversion Table
+
+The conversion sheet linked below allows for Triad SE data to be converted into the relevant TRM G2 data. Note, that refinements were required to control for TAZs that hold only retail shopping for example. 
+
+[Triad to TRM Conversion Sheet](https://drive.google.com/file/d/1a783Js4Y3pwKLMTg7rOvv8GCIGdmPZEY/view?usp=sharing)
 
 
-```{r eval=FALSE, message=FALSE, warning=FALSE,}
-
-[link](https://drive.google.com/file/d/1a783Js4Y3pwKLMTg7rOvv8GCIGdmPZEY/view?usp=sharing)
-
-```
 
 
 
