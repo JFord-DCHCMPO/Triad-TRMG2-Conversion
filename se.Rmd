@@ -257,19 +257,6 @@ parcel_map %>% hideGroup("TRM") %>% hideGroup("Triad")
 
 
 
-```{r eval=FALSE, include=FALSE}
-taz_tool <-leaflet()%>%
-  setView(-79.26, 36.05, zoom=11) %>%
-  addProviderTiles(providers$CartoDB.Positron)%>%
-  addPolygons(data=trmg2_taz,
-              group="TRMG2",
-              color="green",
-              weight=1,
-              popup=paste("TRMG2 TAZ ID: ", trmg2_taz$TAZ_ID))
-
-
-taz_tool
-```
 
 
 
@@ -278,9 +265,12 @@ taz_tool
 
 
 
-```{r eval=FALSE, include=FALSE}
-alamance_se <- trmg2_taz %>%
-  filter(trmg2_taz$COUNTY=="Alamance")
+
+```{r echo=FALSE}
+library(dplyr)
+
+alamance_se <- trmg2_taz 
+alamance_se <- alamance_se %>% filter(alamance_se$COUNTY=="Alamance")
 
 head(alamance_se)
 
@@ -348,6 +338,110 @@ alamance_df
 The conversion sheet linked below allows for Triad SE data to be converted into the relevant TRM G2 data. Note, that refinements were required to control for TAZs that hold only retail shopping for example. 
 
 [Triad to TRM Conversion Sheet](https://drive.google.com/file/d/1a783Js4Y3pwKLMTg7rOvv8GCIGdmPZEY/view?usp=sharing)
+
+
+
+Conversion Script: 
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(readxl)
+triad_to_trm <- read_excel("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/SE Data/AC_OC_SE Calculations.xlsx", 
+    sheet = "Triad->TRM R Input")
+
+triad_to_trm$HH <- NA
+triad_to_trm$POP <- NA
+triad_to_trm$IND <- NA
+triad_to_trm$Serv <- NA
+triad_to_trm$Off <- NA
+triad_to_trm$Retail <- NA
+
+
+head(triad_to_trm)
+
+
+
+```
+
+
+
+
+
+
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+for (i in 1:nrow(triad_to_trm)){
+  
+  triad_to_trm$HH[i] <- (triad_se$HH[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
+  triad_to_trm$POP[i] <- (triad_se$POP_IN_HH[triad_se$ID==triad_to_trm$TriadTAZ[i]] + triad_se$POP_GRP_QT[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
+  triad_to_trm$IND[i] <- (triad_se$EMP_IND[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
+  triad_to_trm$Serv[i] <- (triad_se$EMP_SERVICE[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
+  triad_to_trm$Off[i] <- (triad_se$EMP_OFFICE[triad_se$ID==triad_to_trm$TriadTAZ[i]]+triad_se$SCHOOL_EMP[triad_se$ID==triad_to_trm$TriadTAZ[i]]+triad_se$UNIV_EMP[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
+  triad_to_trm$Retail[i] <-  (triad_se$EMP_RETAIL[triad_se$ID==triad_to_trm$TriadTAZ[i]] + triad_se$EMP_HWYRET[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
+  
+  
+}
+
+
+
+head(triad_to_trm)
+```
+
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+head(alamance_df)
+
+
+```
+
+
+
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+for ( i in unique(alamance_df$TAZ)){
+  
+  alamance_df$HH[alamance_df$TAZ==i] <- sum(triad_to_trm$HH[triad_to_trm$TRM_TAZ==i])
+  alamance_df$HH_Pop[alamance_df$TAZ==i] <- sum(triad_to_trm$POP[triad_to_trm$TRM_TAZ==i])
+  alamance_df$Ind[alamance_df$TAZ==i] <- sum(triad_to_trm$IND[triad_to_trm$TRM_TAZ==i])
+  alamance_df$Office[alamance_df$TAZ==i] <- sum(triad_to_trm$Off[triad_to_trm$TRM_TAZ==i])
+  alamance_df$SvcLo[alamance_df$TAZ==i] <- sum(triad_to_trm$Serv[triad_to_trm$TRM_TAZ==i])
+  alamance_df$Ret[alamance_df$TAZ==i] <- sum(triad_to_trm$Retail[triad_to_trm$TRM_TAZ==i])
+  alamance_df$`Total Employment`[alamance_df$TAZ==i] <- alamance_df$Ind[alamance_df$TAZ==i] + alamance_df$Office[alamance_df$TAZ==i] + alamance_df$SvcLo[alamance_df$TAZ==i]  + alamance_df$Ret[alamance_df$TAZ==i]
+  
+  
+}
+
+alamance_df <- alamance_df %>%
+  mutate_if(is.numeric,round)
+
+head(alamance_df)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
