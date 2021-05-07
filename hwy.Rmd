@@ -46,11 +46,17 @@ trm_g2_hwy<- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance
 trm_g2_hwy <- trm_g2_hwy %>%
   filter(trm_g2_hwy$B_SPECIAL!=31 | trm_g2_hwy$SPECIAL1!=31 |trm_g2_hwy$SPECIAL2!=31 |trm_g2_hwy$SPECIAL3!=31  )
 
+triad_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/Triad_TAZ.shp")
+
+trm_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TAZ_Shape.shp")
+
+trmg2_taz <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TRMG2_TAZ.shp")
+
 
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 hwy_maps <-leaflet()%>%
-  setView(-79.26, 36.05, zoom=11) %>%
+  setView(-79.26, 36.05, zoom=12) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
   addPolylines(data=trm_v6_hwy,
             group ="TRMv6.2",
@@ -68,14 +74,32 @@ hwy_maps <-leaflet()%>%
     addPolylines(data=trm_g2_hwy,
                group="TRMG2",
                color="green",
-               opacity=0.6,
-               weight=0.5,
+               opacity=0.8,
+               weight=1,
                popup=paste("Road Name: ", trm_g2_hwy$ROADNAME)) %>%
-  
-    addLayersControl(overlayGroups = c("TRMv6.2", "Triad", "TRMG2")) 
+      addPolygons(data=triad_taz,
+              group="Triad TAZ",
+              color="red",
+              fillColor = "lightgrey",
+              weight=2,
+             # fill=NA,
+              dashArray = c("5,10"),
+              popup=paste("Triad TAZ ID: ", triad_taz$TAZ)) %>%
+    addPolygons(data=trm_taz,
+              group="TRM TAZ",
+              color="black",
+              fillColor="blue",
+              weight=1,
+              popup=paste("TRM TAZ ID: ", trm_taz$TAZ_ID)) %>%
+  addPolygons(data=trmg2_taz,
+              group="TRMG2 TAZ",
+              color="green",
+              weight=1,
+              popup=paste("TRMG2 TAZ ID: ", trmg2_taz$TAZ_ID)) %>%
+    addLayersControl(overlayGroups = c("TRMv6.2", "Triad", "TRMG2", "Triad TAZ", "TRM TAZ", "TRMG2 TAZ")) 
 
 
-hwy_maps %>% hideGroup("TRMG2")
+hwy_maps %>% hideGroup("TRMG2")%>% hideGroup("Triad TAZ")%>% hideGroup("TRMG2 TAZ")%>% hideGroup("TRM TAZ")
 ```
 
 
