@@ -8,6 +8,8 @@ output: html_document
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
+install.packages("writexl")
+library(writexl)
 library(dplyr)
 library(ggplot2)
 library(leaflet)
@@ -127,6 +129,8 @@ map <- leaflet(data=triad_taz) %>%
 
 map %>% hideGroup("Triad") %>% hideGroup("TRM")
 ```
+
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 trm_taz_zoom <- trm_taz %>%
@@ -266,7 +270,7 @@ parcel_map %>% hideGroup("TRM") %>% hideGroup("Triad")
 
 
 
-```{r echo=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE, results='hide'}
 library(dplyr)
 
 alamance_se <- trmg2_taz 
@@ -365,12 +369,12 @@ head(triad_to_trm)
 
 
 
+For each TRM TAZ, a Triad TAZ covers a portion of the TRM TAZ. That percentage is the 'share' reported below for a sample of TAZs. TRM G2 TAZ 2959 is comprised of two separate Triad TAZs, 4007 and 4299. 
 
 
 
 
-
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 for (i in 1:nrow(triad_to_trm)){
   
   triad_to_trm$HH[i] <- (triad_se$HH[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
@@ -390,17 +394,12 @@ head(triad_to_trm)
 
 
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-head(alamance_df)
-
-
-```
 
 
 
+  The final output can be seen here. A script is available to process any updated Triad SE data into the same format for Alamance County TAZs for the TRM G2 or future enhancements. 
 
-
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 for ( i in unique(alamance_df$TAZ)){
   
   alamance_df$HH[alamance_df$TAZ==i] <- sum(triad_to_trm$HH[triad_to_trm$TRM_TAZ==i])
@@ -426,11 +425,14 @@ head(alamance_df)
 
 
 
+```{r message=FALSE, warning=FALSE, include=FALSE, results='hide'}
 
+path="C:/Users/JacobFo/OneDrive - City of Durham/GitHub/University_Location_Data/Triad-TRMG2-Conversion"
 
+library(writexl)
 
-
-
+write_xlsx(alamance_df)
+```
 
 
 
