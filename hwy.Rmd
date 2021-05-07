@@ -31,38 +31,45 @@ library(RColorBrewer)
 triad_hwy <- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TriadModel/MasterLnFiles/TriadHwy_Lines.shp")
 
 triad_hwy <-triad_hwy %>%
-  filter(triad_hwy$)
+  filter(triad_hwy$FACILITY_T!="Centroid Connector")
 
 trm_v6_hwy<- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TriadModel/MasterLnFiles/TRM_v6_hwy.shp")
 
+trm_v6_hwy <- trm_v6_hwy %>%
+  filter(trm_v6_hwy$SPECIAL!=31)
+
 trm_g2_hwy<- st_read("C:/Users/JacobFo/OneDrive - City of Durham/TRM G2/Alamance Expansion/Triad Model/TriadModel/MasterLnFiles/TRM_NG_HWY.shp")
+
+trm_g2_hwy <- trm_g2_hwy %>%
+  filter(trm_g2_hwy$B_SPECIAL!=31 | trm_g2_hwy$SPECIAL1!=31 |trm_g2_hwy$SPECIAL2!=31 |trm_g2_hwy$SPECIAL3!=31  )
 
 
 ```
 ```{r}
 hwy_maps <-leaflet()%>%
-  #setView(zoom=8) %>%
+  setView(-79.26, 36.05, zoom=11) %>%
   addProviderTiles(providers$CartoDB.Positron)%>%
   addPolylines(data=trm_v6_hwy,
             group ="TRMv6.2",
             color="black",
-            opacity=0.35,
+            opacity=0.6,
             weight=0.5,
             popup=paste("Road Name: ", trm_v6_hwy$ROADNAME)) %>%
   addPolylines(data=triad_hwy,
                group="Triad",
                color="blue",
-               opacity=0.35,
+               opacity=06,
                weight=0.5,
+               dashArray = "5,5",
                popup=paste("Road Name: ", triad_hwy$ROUTE_NAME)) %>%
     addPolylines(data=trm_g2_hwy,
                group="TRMG2",
                color="green",
-               opacity=0.35,
+               opacity=0.6,
                weight=0.5,
                popup=paste("Road Name: ", trm_g2_hwy$ROADNAME)) %>%
   
-    addLayersControl(overlayGroups = c("TRMv6.2", "Triad", "TRMG2"))
+    addLayersControl(overlayGroups = c("TRMv6.2", "Triad", "TRMG2")) 
 
 
 hwy_maps %>% hideGroup("TRMG2")
