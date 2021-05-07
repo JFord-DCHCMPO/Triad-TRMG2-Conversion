@@ -6,6 +6,12 @@ output: html_document
 ---
 
 
+```{r setup, include=FALSE}
+chooseCRANmirror(graphics=FALSE, ind=1)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results = 'hide'}
 install.packages("writexl")
