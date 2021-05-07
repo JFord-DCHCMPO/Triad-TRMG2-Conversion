@@ -345,13 +345,11 @@ alamance_df
 
 ## Final Conversion Table
 
-The conversion sheet linked below allows for Triad SE data to be converted into the relevant TRM G2 data. Note, that refinements were required to control for TAZs that hold only retail shopping for example. 
-
-[Triad to TRM Conversion Sheet](https://drive.google.com/file/d/1a783Js4Y3pwKLMTg7rOvv8GCIGdmPZEY/view?usp=sharing)
+The conversion sheet linked below allows for Triad SE data to be converted into the relevant TRM G2 data. This allows simple copy/pasting of any new Triad SE data to be automatically formatted into TRm G2. The conversion sheet is available at this link: [Triad to TRM Conversion Sheet](https://drive.google.com/file/d/1a783Js4Y3pwKLMTg7rOvv8GCIGdmPZEY/view?usp=sharing)
 
 
 
-Conversion Script: 
+## Conversion Script: 
 
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
@@ -375,12 +373,11 @@ head(triad_to_trm)
 
 
 
-For each TRM TAZ, a Triad TAZ covers a portion of the TRM TAZ. That percentage is the 'share' reported below for a sample of TAZs. TRM G2 TAZ 2959 is comprised of two separate Triad TAZs, 4007 and 4299. 
 
 
 
 
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='HIDE'}
 for (i in 1:nrow(triad_to_trm)){
   
   triad_to_trm$HH[i] <- (triad_se$HH[triad_se$ID==triad_to_trm$TriadTAZ[i]])* triad_to_trm$Share[i]
@@ -398,14 +395,14 @@ for (i in 1:nrow(triad_to_trm)){
 head(triad_to_trm)
 ```
 
+  
 
 
 
 
+  A script is available to process any updated Triad SE data into the same format for Alamance County TAZs for the TRM G2 or future enhancements. The script, written in R, [is available for download here](https://drive.google.com/file/d/1oIcoLzPHEdURQWBa2BAvT_Ux53q6GurA/view?usp=sharing). Instructions are in the script file, but simply updating the directory within the code will allow for the tool to convert the Triad TAZ SE data into TRM G2 format. 
 
-  The final output can be seen here. A script is available to process any updated Triad SE data into the same format for Alamance County TAZs for the TRM G2 or future enhancements. The script, written in R, [is available for download here](https://drive.google.com/file/d/1oIcoLzPHEdURQWBa2BAvT_Ux53q6GurA/view?usp=sharing). Instructions are in the script file, but simply updating the directory within the code will allow for the tool to convert the Triad TAZ SE data into TRM G2 format. 
-
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='HIDE'}
 for ( i in unique(alamance_df$TAZ)){
   
   alamance_df$HH[alamance_df$TAZ==i] <- sum(triad_to_trm$HH[triad_to_trm$TRM_TAZ==i])
