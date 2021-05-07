@@ -397,7 +397,7 @@ head(triad_to_trm)
 
 
 
-  The final output can be seen here. A script is available to process any updated Triad SE data into the same format for Alamance County TAZs for the TRM G2 or future enhancements. 
+  The final output can be seen here. A script is available to process any updated Triad SE data into the same format for Alamance County TAZs for the TRM G2 or future enhancements. The script, written in R, [is available for download here](https://drive.google.com/file/d/1oIcoLzPHEdURQWBa2BAvT_Ux53q6GurA/view?usp=sharing). Instructions are in the script file, but simply updating the directory within the code will allow for the tool to convert the Triad TAZ SE data into TRM G2 format. 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 for ( i in unique(alamance_df$TAZ)){
@@ -422,17 +422,6 @@ head(alamance_df)
 
 
 
-
-
-
-```{r message=FALSE, warning=FALSE, include=FALSE, results='hide'}
-
-path="C:/Users/JacobFo/OneDrive - City of Durham/GitHub/University_Location_Data/Triad-TRMG2-Conversion"
-
-library(writexl)
-
-write_xlsx(alamance_df)
-```
 
 
 
